@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "applications": {
+        "gecko": {
+            "id": "walkingice@web_extension_forward_to_ptt"
+        }
+    },
+    "name": "Forward to PTT",
+    "version": "0.1",
+    "description": "Forward to PTT website from other domains, such as disp.cc",
+    "content_scripts": [
+        {
+            "matches": ["*://*.disp.cc/*"],
+            "js": ["js/main.js"],
+            "run_at": "document_start"
+        }
+    ],
+    "permissions": ["tabs", "activeTab"]
+}
