@@ -1,7 +1,7 @@
 (() => {
     const INTERVAL = 250; // 0.25 second
     const TIMEOUT = 5000; // 5 seconds
-
+    const OPTIONS_AUTO_ENABLED = 'enabled_auto_forward';
 
     function searchUrlFromDisp() {
         let doms = document.getElementsByClassName("record");
@@ -25,12 +25,24 @@
         document.body.append(div);
     }
 
+    function onUrlFound(url) {
+        browser.storage.local.get(OPTIONS_AUTO_ENABLED).then((result)=>{
+            if (!result[OPTIONS_AUTO_ENABLED]) {
+                return;
+            }
+
+            // auto forward to web PTT
+            window.location.assign(url);
+        });
+    }
+
     // keep trying to search PTT url
     let interval = setInterval(() => {
         let url = searchUrlFromDisp();
         if (url) {
             prependUrl(url);
             clearInterval(interval);
+            onUrlFound(url);
         }
     }, INTERVAL);
 

@@ -15,5 +15,8 @@
             "run_at": "document_start"
         }
     ],
-    "permissions": ["tabs", "activeTab"]
+    "options_ui": {
+        "page": "options/options.html"
+    },
+    "permissions": ["tabs", "activeTab", "storage"]
 }
