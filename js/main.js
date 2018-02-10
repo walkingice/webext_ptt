@@ -5,6 +5,8 @@
     const OPTIONS_FORWARD_DELAY = 'auto_forward_delay';
     const DEFAULT_DELAY = 5;
 
+    const COUNT_DOWN_SPAN_ID = 'countdown_span';
+
     function searchUrlFromDisp() {
         let doms = document.getElementsByClassName("record");
         let index;
@@ -20,12 +22,28 @@
      * To find out original PTT url from disp.cc, and prepend to page top
      */
     function prependUrl(url) {
-        let href = '<a href="' + url + '">' + url + "</a>";
+        let fragment = document.createDocumentFragment();
+
+        let link = document.createElement('a');
+        link.href = url;
+        link.innerText = url;
+
         let div = document.createElement("div");
-        let style = 'style="color:blue; background-color:#EE0; position: fixed; top:0px;left:0px; width:100%;"';
-        let countDownSpan = '<span id="countdown_span" style="float:right; margin-right:10px"></span>';
-        div.innerHTML='<div ' + style + '>' + href + countDownSpan + '</div>';
-        document.body.append(div);
+        div.style.backgroundColor = '#EE0';
+        div.style.position = 'fixed';
+        div.style.top = '0px';
+        div.style.left = '0px';
+        div.style.width = '100%';
+
+        let countDown = document.createElement('span');
+        countDown.id = COUNT_DOWN_SPAN_ID;
+        countDown.style.float = 'right';
+        countDown.style.marginRight = '10px';
+
+        div.appendChild(link);
+        div.appendChild(countDown);
+        fragment.appendChild(div);
+        document.body.append(fragment);
     }
 
     function onUrlFound(url) {
@@ -47,10 +65,22 @@
                 return;
             }
 
-            let container = document.getElementById("countdown_span");
-            container.innerHTML = 'Wait <span id="count_down">' + delay + '</span>...<button id="cancel">Cancel</button>';
-            let countDownSec = document.getElementById('count_down');
-            let cancelBtn = document.getElementById('cancel');
+            // create html: Wait <span>' + delay + '</span>...<button >Cancel</button>
+            let fragment = document.createDocumentFragment();
+            fragment.appendChild(document.createTextNode('Wait '));
+
+            let countDownSec = document.createElement('span');
+            countDownSec.innerText = delay;
+            fragment.appendChild(countDownSec);
+
+            fragment.appendChild(document.createTextNode('....'));
+
+            let cancelBtn = document.createElement('button');
+            cancelBtn.innerText = 'Cancel';
+            fragment.appendChild(cancelBtn);
+
+            let container = document.getElementById(COUNT_DOWN_SPAN_ID);
+            container.appendChild(fragment);
 
             let countDown = setInterval(() => {
                 delay--;
